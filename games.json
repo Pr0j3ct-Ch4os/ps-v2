@@ -1,0 +1,5 @@
+[
+  { "name": "Fortnite", "dir": "fortnite", "image": "images/fortnite.jpg" },
+  { "name": "GBA EMU", "dir": "gba_emu", "image": "images/gba_emu.jpg" },
+  { "name": "Eaglercraft", "dir": "eaglercraft", "image": "images/eaglercraft.jpg" }
+]

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Host</title>
+<link rel="stylesheet" href="stylesbeta.css">
+<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+<style>
+  body { margin:0; font-family:'Pixelify Sans'; overflow:hidden; background:#000; }
+
+
+  #particles-js { position:fixed;width:100%;height:100%;z-index:-1; }
+
+
+  .sidebar {
+    position:fixed; left:0; top:0; height:100%; width:220px;
+    background:rgba(0,0,0,0.85); border-right:2px solid yellow;
+    display:flex; flex-direction:column; align-items:center; padding-top:20px;
+    box-shadow:0 0 20px yellow; transition: transform 0.3s ease-in-out;
+    z-index:10;
+  }
+  .sidebar.hidden { transform: translateX(-100%); }
+
+  .sidebar a, .sidebar button {
+    color: yellow; text-decoration:none; margin:15px 0; font-weight:bold;
+    font-size:18px; text-shadow:0 0 5px yellow,0 0 10px yellow;
+    transition:0.2s ease-in-out; background:none; border:none; cursor:pointer;
+  }
+  .sidebar a:hover, .sidebar button:hover { color: cyan; text-shadow:0 0 5px cyan,0 0 15px cyan; transform: scale(1.1); }
+
+  #game-frame {
+    position:absolute; top:0; left:220px; width:calc(100% - 220px); height:100%;
+    border:none; z-index:5; transition: all 0.3s ease-in-out; background:transparent;
+  }
+</style>
+</head>
+<body>
+<div id="particles-js"></div>
+<div class="sidebar" id="sidebar">
+  <a href="index.html">Main Menu</a>
+  <a href="games.html">Games</a>
+  <a href="#">Settings (wip)</a>
+  <a href="partners.html">Partners <3</a>
+  <button id="toggle-sidebar">sidebar (must refresh to reload)</button>
+</div>
+<iframe id="game-frame" src="iframe.html" allowtransparency="true"></iframe>
+<script>
+let particlesEnabled = true;
+function initParticles() {
+  if (!particlesEnabled) return;
+  particlesJS("particles-js", {
+    "particles": {
+      "number": { "value": 80 },
+      "size": { "value": 3 },
+      "move": { "speed": 2 },
+      "line_linked": { "enable": true },
+      "color": { "value": "#FFFF00" }
+    }
+  });
+}
+initParticles();
+
+
+const toggleBtn = document.getElementById("toggle-sidebar");
+toggleBtn.addEventListener("click", () => {
+  const sidebar = document.getElementById("sidebar");
+  const iframe = document.getElementById("game-frame");
+
+  if (sidebar.classList.contains("hidden")) {
+    sidebar.classList.remove("hidden");
+    iframe.style.left = "220px";
+    iframe.style.width = "calc(100% - 220px)";
+    toggleBtn.textContent = "Hide Sidebar";
+  } else {
+    sidebar.classList.add("hidden");
+    iframe.style.left = "0";
+    iframe.style.width = "100%";
+    toggleBtn.textContent = "Show Sidebar";
+  }
+});
+
+window.addEventListener("message", (e) => {
+  if (e.data.type === "uiToggle") {
+    const sidebar = document.getElementById('sidebar');
+    const iframe = document.getElementById("game-frame");
+
+    if (e.data.hideSidebar) {
+      sidebar.classList.add('hidden');
+      iframe.style.left = "0";
+      iframe.style.width = "100%";
+    } else {
+      sidebar.classList.remove('hidden');
+      iframe.style.left = "220px";
+      iframe.style.width = "calc(100% - 220px)";
+    }
+
+    if (e.data.disableParticles) {
+      particlesEnabled = false;
+      document.getElementById("particles-js").style.display = "none";
+    } else {
+      particlesEnabled = true;
+      document.getElementById("particles-js").style.display = "block";
+      initParticles();
+    }
+  }
+});
+</script>
+
+</body>
+</html>

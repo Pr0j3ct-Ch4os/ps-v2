@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Selector</title>
+<style>
+  body { 
+    margin: 0; 
+    font-family: 'Pixelify Sans'; 
+    display: flex; 
+    flex-direction: column; 
+    background: transparent; 
+    color: yellow; 
+  }
+
+  .game-grid { 
+    display: grid; 
+    grid-template-columns: repeat(4, 1fr); /* max 4 cards per row */
+    gap: 20px; 
+    padding: 20px; 
+    flex: 1; 
+  }
+
+  /* Responsive breakpoints */
+  @media (max-width: 900px) {
+    .game-grid {
+      grid-template-columns: repeat(2, 1fr); /* 2 per row on tablets */
+    }
+  }
+
+  @media (max-width: 500px) {
+    .game-grid {
+      grid-template-columns: 1fr; /* stack on mobile */
+    }
+  }
+
+  .game-card { 
+    background: #222; 
+    border: 2px solid yellow; 
+    border-radius: 10px; 
+    text-align: center; 
+    cursor: pointer; 
+    transition: 0.2s; 
+    overflow: hidden; /* keeps images inside rounded corners */
+  }
+
+  .game-card:hover { 
+    transform: scale(1.05); 
+    box-shadow: 0 0 20px yellow; 
+  }
+
+  .game-card img { 
+    width: 100%; 
+    height: 150px;            /* keep card size consistent */
+    object-fit: cover;        /* crop/scale without distortion */
+    border-radius: 10px 10px 0 0; 
+  }
+
+  .game-card h3 {
+    margin: 10px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="game-grid" id="game-grid">
+  <div class="game-card" data-game="game1">
+    <img src="images/mincraf.png" alt="Game 1"><h3>Eaglercraft</h3>
+  </div>
+  <div class="game-card" data-game="game2">
+    <img src="images/sm64.png" alt="Game 2"><h3>super mario 64</h3>
+  </div>
+  <div class="game-card" data-game="game3">
+    <img src="images/badparenting1.png" alt="badparenting"><h3>Bad Parenting</h3>
+  </div>
+  <div class="game-card" data-game="game4">
+    <img src="images/buckshot.png" alt="buckshot"><h3>Buckshot Roulette</h3>
+  </div>
+  <div class="game-card" data-game="game5">
+    <img src="images/ultrakill.png" alt="ultrakill"><h3>ultrakill</h3>
+  </div>
+  <div class="game-card" data-game="game6">
+    <img src="images/pizzatower.png" alt="pizzatower"><h3>Pizza Tower</h3>
+  </div>
+  <div class="game-card" data-game="game7">
+    <img src="images/deltarune.png" alt="deltarune"><h3>Deltarune</h3>
+  </div>
+</div>
+
+<script>
+const gamesJSON = {
+  "game1": { url: "games/eagler/index.html", disableParticles: false, hideSidebar: false, fullscreen: false },
+  "game2": { url: "games/sm64/index.html", disableParticles: true, hideSidebar: true, fullscreen: true },
+  "game3": { url: "games/badparenting/index.html", disableParticles: true, hideSidebar: true, fullscreen: true },
+  "game4": { url: "games/buckshot/index.html", disableParticles: true, hideSidebar: true, fullscreen: true },
+  "game5": { url: "games/ultrakill/index.html", disableParticles: true, hideSidebar: true, fullscreen: true },
+  "game6": { url: "games/pizzatower/index.html", disableParticles: true, hideSidebar: true, fullscreen: true },
+  "game7": { url: "games/deltarune/index.html", disableParticles: true, hideSidebar: true, fullscreen: true },
+};
+
+document.querySelectorAll('.game-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const key = card.dataset.game;
+    const gameData = gamesJSON[key];
+    if (!gameData) return;
+
+    window.location.href = gameData.url;
+
+    window.parent.postMessage({
+      type: "uiToggle",
+      hideSidebar: gameData.hideSidebar,
+      disableParticles: gameData.disableParticles,
+      fullscreen: gameData.fullscreen
+    }, "*");
+  });
+});
+</script>
+
+</body>
+</html>
